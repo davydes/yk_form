@@ -1,0 +1,8 @@
+action=checkOrder
+md5=1B35ABE38AA54F2931B0C58646FD1321
+shopId=13
+invoiceId=55
+customerNumber=8123294469
+orderSumAmount=87.10
+orderSumCurrencyPaycash=643
+orderSumBankPaycash=1001
