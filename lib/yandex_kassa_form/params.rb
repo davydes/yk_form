@@ -14,7 +14,7 @@ module YandexKassaForm
     ] 
    
     def parse(body)
-      body.split("\n").map do |param|
+      hash = body.split("\n").map do |param|
         corresponders = param.split("=")
         [corresponders[0].to_sym, corresponders[1]]
       end.to_h

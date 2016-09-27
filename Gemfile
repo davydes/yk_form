@@ -5,3 +5,4 @@ gemspec
 
 gem 'builder'
 gem 'nokogiri', group: :test
+gem 'pry', group: :test
