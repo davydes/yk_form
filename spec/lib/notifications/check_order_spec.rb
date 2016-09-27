@@ -3,13 +3,13 @@ require 'nokogiri'
 
 describe YandexKassaForm::Notification::CheckOrder do
   include LoaderMacro
-  let (:valid_password) { 's<kY23653f,{9fcnshwq' }
-  let (:invalid_password) { 'invalid' }
-  let (:error_message) { 'message when errored' }
+  valid_password = 's<kY23653f,{9fcnshwq'
+  invalid_password = 'invalid'
+  error_message = 'message when errored'
   let (:params) { load_params('check_order.txt') }
   let (:good_params) { params.merge!(shopPassword: valid_password) }
   let (:bad_params) { params.merge!(shopPassword: invalid_password) }
-  let (:true_block) { Proc.new { [true] } }
+  true_block = Proc.new { [true] }
 
   def notification(params, block)
     YandexKassaForm::Notification::CheckOrder.new params, &block
@@ -40,16 +40,12 @@ describe YandexKassaForm::Notification::CheckOrder do
         end
       end
       
-      let (:check_first)  { Proc.new { |params| Checker.test_sum(params, ORDERS.first) } }
-      let (:check_second) { Proc.new { |params| Checker.test_sum(params, ORDERS.last ) } }
+      check_first = Proc.new { |params| Checker.test_sum(params, ORDERS.first) }
+      check_second = Proc.new { |params| Checker.test_sum(params, ORDERS.last ) }
       
       it { expect(notification(good_params, check_first).code).to be 0 }
       it { expect(notification(good_params, check_second).code).to be 100 }
       it { expect(notification(good_params, check_second).message).to eq 'errormsg' }
     end
-  end
-
-  describe '.message' do
-    
   end
 end

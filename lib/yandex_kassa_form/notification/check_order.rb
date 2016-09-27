@@ -1,8 +1,6 @@
 module YandexKassaForm
   module Notification
     class CheckOrder < Base
-      RESP_TAG = 'checkOrderResponse'
-      
       def initialize(params, &block)
         @check_block = block
         raise ArgumentError unless @check_block.respond_to?(:call)

@@ -3,7 +3,7 @@ module LoaderMacro
     def load_file(filename)
       File.new(File.expand_path("../files/#{filename}", __FILE__)).read
     end
-
+    
     def load_params(filename)
       params = YandexKassaForm::Params.parse(load_file(filename))
     end

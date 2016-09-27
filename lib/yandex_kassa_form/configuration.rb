@@ -1,5 +1,5 @@
 module YandexKassaForm
   class Configuration
-    attr_accessor :shop_id, :shop_password
+    attr_accessor :shop_id, :shop_password, :check_order
   end
 end
