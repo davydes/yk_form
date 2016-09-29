@@ -1,9 +1,8 @@
 # YandexKassaForm
 
-Description of YK protocol is here:
-https://tech.yandex.ru/money/doc/payment-solution/payment-notifications/payment-notifications-http-docpage/
+[Yandex Kassa Integration by HTTP](https://tech.yandex.ru/money/doc/payment-solution/payment-notifications/payment-notifications-http-docpage)
 
-## !!! This Gem under construction !!! And still not working.
+## !!! This Gem under construction !!!
 
 ## Installation
 
@@ -35,15 +34,17 @@ YandexKassaForm.configure do |cfg|
   # You should return array with 1 or 2 values
   # First value must be boolean: true - success, false - fail
   # If first is false, second should be contain message
+  # Message will be ignored when first value is true
   cfg.check_order = lambda do |params|
     puts 'Here is real check data in Order'
     params.each { |k,v| puts "#{k} = #{v}" }
-    [true]
+    check_result = false
+    [check_result, 'Ooopps']
   end
 
   # This block called when payment aviso received
-  # In the block you should save data to you DB, for example
-  cfg.confirm_order = lambda do |params|
+  # In the block you should save data about payment to you DB, for example
+  cfg.save_payment = lambda do |params|
     puts 'Do somthing to store data about this payment'
     params.each { |k,v| puts "#{k} = #{v}" }
   end

@@ -29,7 +29,7 @@ module YandexKassaForm
         when 'checkOrder' then
           Notification::CheckOrder.new(params, &configuration.check_order)
         when 'paymentAviso' then
-          Notification::PaymentAviso.new(params, &configuration.confirm_order)
+          Notification::PaymentAviso.new(params, &configuration.save_payment)
         else
           raise ArgumentError.new("Unknown Action [#{params[:action]}]")
       end
