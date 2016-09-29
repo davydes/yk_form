@@ -9,16 +9,12 @@
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'yk_form'
+gem 'yk_form', github: 'davydes/yk_form'
 ```
 
 And then execute:
 
     $ bundle
-
-Or install it yourself as:
-
-    $ gem install yk_form
 
 ## Usage
 
