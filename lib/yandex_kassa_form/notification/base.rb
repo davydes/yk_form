@@ -16,13 +16,13 @@ module YandexKassaForm
       end
       
       private
-
+      
       def check!
         @code ||= valid_signature? ? 0 : 1
       end
       
       def signature_data
-        Params::SIGNATURE_PARAMS.map { |name| @params[name] }
+        Request::SIGNATURE_PARAMS.map { |name| @params[name] }
       end
      
       def signature

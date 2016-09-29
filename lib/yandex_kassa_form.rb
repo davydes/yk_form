@@ -1,6 +1,6 @@
 require 'yandex_kassa_form/version'
 require 'yandex_kassa_form/configuration'
-require 'yandex_kassa_form/params'
+require 'yandex_kassa_form/request'
 require 'yandex_kassa_form/response'
 require 'yandex_kassa_form/notification/base'
 require 'yandex_kassa_form/notification/check_order'
@@ -19,19 +19,17 @@ module YandexKassaForm
   end
 
   def handler(body)
-    params = Params.parse body
+    params = Request.parse body
     params[:shopId] = configuration.shop_id
-    params[:password] = configuration.shop_password
-    Params.require! params
+    params[:shopPassword] = configuration.shop_password
+    Request.require! params
     
     notification =
       case params[:action]
         when 'checkOrder' then
           Notification::CheckOrder.new(params, configuration.check_order)
         when 'cancelOrder' then
-          Notification::CancelOrder.new(params)
-        when 'paymentAviso' then
-          Notification::PaymentAviso.new(params)
+          Notification::PaymentAviso.new(params, configuration.confirm_order)
         else
           raise ArgumentError.new("Unknown Action [#{params[:action]}]")
       end

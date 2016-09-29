@@ -1,5 +1,5 @@
 module YandexKassaForm
-  module Params
+  module Request
     extend self
    
     SIGNATURE_PARAMS = [

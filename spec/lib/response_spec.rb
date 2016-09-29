@@ -2,25 +2,40 @@ require 'spec_helper'
 require 'nokogiri'
 
 describe YandexKassaForm::Response do
-  include LoaderMacro
-  valid_password = 's<kY23653f,{9fcnshwq'
-  invalid_password = 'invalid'
-  error_message = 'message when errored'
-  let (:node) { @document.xpath(@tag_resp) }
+  describe '.resp_tag' do
+    it do
+      notification = YandexKassaForm::Notification::Base.new request
+      expect(YandexKassaForm::Response.resp_tag(notification)).to eq 'baseResponse'
+    end
+    it do
+      notification = YandexKassaForm::Notification::CheckOrder.new request, &TRUE_PROC
+      expect(YandexKassaForm::Response.resp_tag(notification)).to eq 'checkOrderResponse'
+    end
+    it do
+      notification = YandexKassaForm::Notification::PaymentAviso.new request, &TRUE_PROC
+      expect(YandexKassaForm::Response.resp_tag(notification)).to eq 'paymentAvisoResponse'
+    end
+    it do
+      notification = YandexKassaForm::Notification::CancelOrder.new request
+      expect(YandexKassaForm::Response.resp_tag(notification)).to eq 'cancelOrderResponse'
+    end
+  end
 
   describe '.generate' do
-    context 'tests with Base notification' do
-      let (:params) { @params ||= load_params('generic_body.txt') }
-      let (:good_params) { params.merge!(shopPassword: valid_password) }
-      let (:bad_params) { params.merge!(shopPassword: invalid_password) }
-      def object(params) YandexKassaForm::Notification::Base.new(params) end
-      def subject(object) YandexKassaForm::Response.generate(object) end
-      
+    let (:node) { @document.xpath(@tag_resp) }
+    def subject(object)
+      YandexKassaForm::Response.generate(object)
+    end
+
+    context 'fields' do
       before { @tag_resp = 'baseResponse'}
+      def object
+        YandexKassaForm::Notification::Base.new(request)
+      end
       
-      context 'fields when right password' do
+      context 'when right password' do
         before :each do
-          @document = Nokogiri::XML(subject(object(good_params)))
+          @document = Nokogiri::XML(subject(object))
         end
         
         it { expect(node.attr('code').value).to eq '0' }
@@ -30,30 +45,32 @@ describe YandexKassaForm::Response do
         it { expect(node.attr('message')).to be_nil }
       end
       
-      context 'code field' do
+      context 'code' do
         before :each do
-          @document = Nokogiri::XML(subject(object((bad_params))))
+          stub_const('PASSWORD', PASSWORD_INVALID)
+          @document = Nokogiri::XML(subject(object))
         end
         
         it { expect(node.attr('code').value).to eq '1' }
       end
       
-      context 'message field' do
+      context 'message' do
         context 'when message filled & code != 0' do
           before :each do
-            object = object(bad_params)
-            object.message = error_message
-            @document = Nokogiri::XML(subject(object))
+            stub_const('PASSWORD', PASSWORD_INVALID)
+            n = object
+            n.message = ERROR_MESSAGE
+            @document = Nokogiri::XML(subject(n))
           end
           
-          it { expect(node.attr('message').value).to eq error_message }
+          it { expect(node.attr('message').value).to eq ERROR_MESSAGE }
         end
         
         context 'when message filled & code = 0' do
           before :each do
-            object = object(good_params)
-            object.message = error_message
-            @document = Nokogiri::XML(subject(object))
+            n = object
+            n.message = ERROR_MESSAGE
+            @document = Nokogiri::XML(subject(n))
           end
           
           it { expect(node.attr('message')).to be_nil }

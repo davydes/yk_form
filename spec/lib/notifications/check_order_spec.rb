@@ -2,30 +2,26 @@ require 'spec_helper'
 require 'nokogiri'
 
 describe YandexKassaForm::Notification::CheckOrder do
-  include LoaderMacro
-  valid_password = 's<kY23653f,{9fcnshwq'
-  invalid_password = 'invalid'
-  error_message = 'message when errored'
-  let (:params) { load_params('check_order.txt') }
-  let (:good_params) { params.merge!(shopPassword: valid_password) }
-  let (:bad_params) { params.merge!(shopPassword: invalid_password) }
-  true_block = Proc.new { [true] }
+  before { stub_const 'BODY_FILE', 'check_order.txt'}
 
-  def notification(params, block)
-    YandexKassaForm::Notification::CheckOrder.new params, &block
+  def notification(block)
+    YandexKassaForm::Notification::CheckOrder.new request, &block
   end
 
   describe '.initialize' do
     it do
       expect do
-        YandexKassaForm::Notification::CheckOrder.new good_params
+        YandexKassaForm::Notification::CheckOrder.new request
       end.to raise_error ArgumentError
     end
   end
 
   describe '.code' do
-    it { expect(notification(good_params, true_block).code).to be 0 }
-    it { expect(notification(bad_params, true_block).code).to be 1 }
+    it { expect(notification(TRUE_PROC).code).to be 0 }
+    it do
+      stub_const('PASSWORD', PASSWORD_INVALID)
+      expect(notification(TRUE_PROC).code).to be 1
+    end
     
     context 'with an Order' do
       Order = Struct.new(:id, :sum)
@@ -43,9 +39,9 @@ describe YandexKassaForm::Notification::CheckOrder do
       check_first = Proc.new { |params| Checker.test_sum(params, ORDERS.first) }
       check_second = Proc.new { |params| Checker.test_sum(params, ORDERS.last ) }
       
-      it { expect(notification(good_params, check_first).code).to be 0 }
-      it { expect(notification(good_params, check_second).code).to be 100 }
-      it { expect(notification(good_params, check_second).message).to eq 'errormsg' }
+      it { expect(notification(check_first).code).to be 0 }
+      it { expect(notification(check_second).code).to be 100 }
+      it { expect(notification(check_second).message).to eq 'errormsg' }
     end
   end
 end

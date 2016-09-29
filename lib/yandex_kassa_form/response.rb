@@ -3,13 +3,13 @@ module YandexKassaForm
     extend self
     
     def resp_tag(notification)
-      case notification.class
-        when YandexKassaForm::Notification::CheckOrder
+      case notification.class.name
+        when 'YandexKassaForm::Notification::CheckOrder'
           'checkOrderResponse'
-        when YandexKassaForm::Notification::CancelOrder
+        when 'YandexKassaForm::Notification::CancelOrder'
           'cancelOrderResponse'
-        when YandexKassaForm::Notification::PaymentAviso
-          'paymetAvisoResponse'
+        when 'YandexKassaForm::Notification::PaymentAviso'
+          'paymentAvisoResponse'
         else
           'baseResponse'
       end
