@@ -25,7 +25,7 @@ module YandexKassaForm
         end
         
         @code = result[0] ? 0 : 100        
-      rescue TypeError
+      rescue
         @code = 100
       end
     end

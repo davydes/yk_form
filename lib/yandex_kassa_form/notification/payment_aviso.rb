@@ -14,7 +14,6 @@ module YandexKassaForm
         @confirm_block.call(@params)
       rescue
         @code = 200
-        @message = 'Unhandled exception'
       end
     end
   end
