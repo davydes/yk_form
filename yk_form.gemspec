@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Eugene Davydov"]
   spec.email         = ["davydes@gmail.com"]
 
-  spec.summary       = %q{YandexKassa intgration via forms method}
+  spec.summary       = %q{YandexKassa intgration via forms HTTP method}
   spec.description   = %q{See more on github http://github.com/davydes/yk_form}
   spec.homepage      = "http://github.com/davydes/yk_form"
   spec.license       = "MIT"

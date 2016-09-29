@@ -21,7 +21,7 @@ module YandexKassaForm
     end
 
     def require!(hash)
-      missings = SIGNATURE_PARAMS - hash.reject{ |_,v| v.nil? || v.empty? }.keys
+      missings = SIGNATURE_PARAMS - hash.reject{ |_,v| v.nil? || (v.is_a?(String) && v.empty?) }.keys
       if (missings).any?
         raise ArgumentError.new("Missings params #{missings}")
       end

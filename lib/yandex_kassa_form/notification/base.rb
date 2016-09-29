@@ -1,5 +1,6 @@
 require 'builder'
 require 'time'
+require 'digest'
 
 module YandexKassaForm
   module Notification
