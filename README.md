@@ -23,7 +23,42 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'yandex_kassa_form'
+
+# Initialize module
+YandexKassaForm.configure do |cfg|
+  cfg.shop_id = 13
+  cfg.shop_password = 's<kY23653f,{9fcnshwq'
+
+  # This block called when check order received
+  # You should return array with 1 or 2 values
+  # First value must be boolean: true - success, false - fail
+  # If first is false, second should be contain message
+  cfg.check_order = lambda do |params|
+    puts 'Here is real check data in Order'
+    params.each { |k,v| puts "#{k} = #{v}" }
+    [true]
+  end
+
+  # This block called when payment aviso received
+  # In the block you should save data to you DB, for example
+  cfg.confirm_order = lambda do |params|
+    puts 'Do somthing to store data about this payment'
+    params.each { |k,v| puts "#{k} = #{v}" }
+  end
+end
+
+rq = File.new('/home/developer3/my/yk_form/spec/support/files/check_order.txt').read
+puts "Received request: \n=== BEGIN\n#{rq}\n=== END"
+rp = YandexKassaForm.handler rq
+puts "Send response: \n#{rp}"
+
+rq = File.new('/home/developer3/my/yk_form/spec/support/files/payment_aviso.txt').read
+puts "Received request: \n=== BEGIN\n#{rq}\n=== END"
+rp = YandexKassaForm.handler rq
+puts "Send response: \n#{rp}"
+```
 
 ## Development
 
