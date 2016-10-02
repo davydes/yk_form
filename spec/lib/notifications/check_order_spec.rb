@@ -43,5 +43,10 @@ describe YandexKassaForm::Notification::CheckOrder do
       it { expect(notification(check_second).code).to be 100 }
       it { expect(notification(check_second).message).to eq 'errormsg' }
     end
+   
+    context 'when block has exception' do
+      block = lambda { |params| raise StandartError }
+      it { expect(notification(block).code).to be 100 }
+    end
   end
 end
