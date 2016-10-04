@@ -12,7 +12,6 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
       Coveralls::SimpleCov::Formatter
 ]
 SimpleCov.start
-CodeClimate::TestReporter.start
 
 PASSWORD_GOOD    = 's<kY23653f,{9fcnshwq'
 PASSWORD_INVALID = 'invalid pwd'
