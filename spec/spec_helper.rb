@@ -2,6 +2,17 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 $LOAD_PATH.unshift File.expand_path('../../spec/support', __FILE__)
 require 'yandex_kassa_form'
 require 'pry'
+require 'coveralls'
+require 'simplecov'
+require 'codeclimate-test-reporter'
+
+Coveralls.wear!
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[
+    SimpleCov::Formatter::HTMLFormatter,
+      Coveralls::SimpleCov::Formatter
+]
+SimpleCov.start
+CodeClimate::TestReporter.start
 
 PASSWORD_GOOD    = 's<kY23653f,{9fcnshwq'
 PASSWORD_INVALID = 'invalid pwd'
