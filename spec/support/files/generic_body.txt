@@ -1,8 +1,1 @@
-action=someAction
-md5=018D2C1E082553172C46F463E2990DB6
-shopId=13
-invoiceId=55
-customerNumber=8123294469
-orderSumAmount=87.10
-orderSumCurrencyPaycash=643
-orderSumBankPaycash=1001
+action=someAction&md5=018D2C1E082553172C46F463E2990DB6&shopId=13&invoiceId=55&customerNumber=8123294469&orderSumAmount=87.10&orderSumCurrencyPaycash=643&orderSumBankPaycash=1001
