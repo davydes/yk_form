@@ -6,8 +6,6 @@
 
 [Yandex Kassa Integration by HTTP](https://tech.yandex.ru/money/doc/payment-solution/payment-notifications/payment-notifications-http-docpage)
 
-## !!! This Gem under construction !!!
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -59,6 +57,88 @@ rq = File.new('/home/developer3/my/yk_form/spec/support/files/payment_aviso.txt'
 puts "Received request: \n=== BEGIN\n#{rq}\n=== END"
 rp = YandexKassaForm.handler rq
 puts "Send response: \n#{rp}"
+```
+
+## Rails example
+
+*config/initializers/yandex.rb*
+```ruby
+require 'yandex_kassa_form'
+require 'yandex'
+
+YandexKassaForm.configure do |cfg|
+  cfg.shop_id = ENV['YK_SHOPID']
+  cfg.shop_password = ENV['YK_PASSWORD']
+  cfg.check_order = -> (params) { Yandex.instance.check_order(params) }
+  cfg.save_payment = -> (params) { Yandex.instance.save_payment(params) }
+end
+```
+
+*app/controllers/yandex/rb*
+```ruby
+class YandexController < ActionController::Base
+  def handle
+    render body: YandexKassaForm.handler(request.raw_post),
+           content_type: 'application/xml'
+  end
+end
+```
+
+*config/routes.rb*
+```ruby
+Rails.application.routes.draw do
+
+  post 'yandexkassa' => 'yandex#handle'
+
+end
+```
+
+*lib/yandex.rb*
+```ruby
+require 'singleton'
+
+class Yandex
+  include Singleton
+
+  def logger
+    return @logger if @logger
+    @logger = Logger.new(Rails.root.join('log','yandex.log'))
+    @logger.level = 0
+    @logger
+  end
+
+  def check_order(params)
+    logger.info("check_order: #{params.inspect}")
+    order = Order.find_by_id(params[:orderNumber])
+
+    unless order
+      result = [false, 'Order not found!']
+    end
+
+    if result.nil?
+      sum_equals = order.cost == BigDecimal(params[:orderSumAmount])
+      result = [sum_equals, 'Sum does not match!']
+    end
+
+    logger.info("returned #{result.inspect}")
+    result
+  rescue => e
+    logger.error(e.message)
+    logger.error(e.backtrace.join("\n"))
+    raise e
+  end
+
+  def save_payment(params)
+    logger.info("save_payment: #{params.inspect}")
+    order = Order.find_by_id!(params[:orderNumber])
+    order.paid!
+    logger.info("Order #{order.id} marked as paid.")
+  rescue => e
+    logger.error(e.message)
+    logger.error(e.backtrace.join("\n"))
+    raise e
+  end
+end
 ```
 
 ## Development
