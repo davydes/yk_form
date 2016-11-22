@@ -94,6 +94,9 @@ end
 ```
 
 *lib/yandex.rb*
+
+The file containts main logic about how you handle yours data.
+
 ```ruby
 require 'singleton'
 
